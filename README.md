@@ -3,9 +3,11 @@
 git clone https://github.com/iview/iview-admin.git
 
 // install dependencies
+
 npm install
 
 // develop
+
 npm run dev
 ```
 
