@@ -1,13 +1,13 @@
 
+## Getting started
+```bush
 # clone the project
-git clone https://github.com/iview/iview-admin.git
+https://github.com/Echoyya/admin.git
 
 // install dependencies
-
 npm install
 
 // develop
-
 npm run dev
 ```
 
@@ -15,4 +15,3 @@ npm run dev
 ```bush
 npm run build
 ```
-

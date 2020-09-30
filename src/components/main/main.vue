@@ -3,8 +3,9 @@
     <Sider hide-trigger collapsible :width="256" :collapsed-width="64" v-model="collapsed" class="left-sider" :style="{overflow: 'hidden'}">
       <side-menu accordion ref="sideMenu" :active-name="$route.name" :collapsed="collapsed" @on-select="turnToPage" :menu-list="menuList">
         <!-- 需要放在菜单上面的内容，如Logo，写在side-menu标签内部，如下 -->
-        <div class="logo-con">
-          <img v-show="!collapsed" :src="maxLogo" key="max-logo" />
+        <div class="logo-con" style="color:#ffffff;text-align:center;font-size:25px;">
+          <!-- <img v-show="!collapsed" :src="maxLogo" key="max-logo" /> -->
+          <p v-show="!collapsed">体育馆后台管理</p>
           <img v-show="collapsed" :src="minLogo" key="min-logo" />
         </div>
       </side-menu>
@@ -13,8 +14,6 @@
       <Header class="header-con">
         <header-bar :collapsed="collapsed" @on-coll-change="handleCollapsedChange">
           <user :message-unread-count="unreadCount" :user-avatar="userAvatar"/>
-          <language v-if="$config.useI18n" @on-lang-change="setLocal" style="margin-right: 10px;" :lang="local"/>
-          <error-store v-if="$config.plugin['error-store'] && $config.plugin['error-store'].showInHeader" :has-read="hasReadErrorPage" :count="errorCount"></error-store>
           <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/>
         </header-bar>
       </Header>
@@ -27,7 +26,6 @@
             <keep-alive :include="cacheList">
               <router-view/>
             </keep-alive>
-            <ABackTop :height="100" :bottom="80" :right="50" container=".content-wrapper"></ABackTop>
           </Content>
         </Layout>
       </Content>
@@ -39,11 +37,8 @@ import SideMenu from './components/side-menu'
 import HeaderBar from './components/header-bar'
 import TagsNav from './components/tags-nav'
 import User from './components/user'
-import ABackTop from './components/a-back-top'
 import Fullscreen from './components/fullscreen'
-import Language from './components/language'
-import ErrorStore from './components/error-store'
-import { mapMutations, mapActions, mapGetters } from 'vuex'
+import { mapMutations, mapActions } from 'vuex'
 import { getNewTagList, routeEqual } from '@/libs/util'
 import routers from '@/router/routers'
 import minLogo from '@/assets/images/logo-min.jpg'
@@ -54,12 +49,9 @@ export default {
   components: {
     SideMenu,
     HeaderBar,
-    Language,
     TagsNav,
     Fullscreen,
-    ErrorStore,
-    User,
-    ABackTop
+    User
   },
   data () {
     return {
@@ -70,9 +62,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'errorCount'
-    ]),
     tagNavList () {
       return this.$store.state.app.tagNavList
     },
@@ -89,12 +78,6 @@ export default {
     menuList () {
       return this.$store.getters.menuList
     },
-    local () {
-      return this.$store.state.app.local
-    },
-    hasReadErrorPage () {
-      return this.$store.state.app.hasReadErrorPage
-    },
     unreadCount () {
       return this.$store.state.user.unreadCount
     }
@@ -104,7 +87,6 @@ export default {
       'setBreadCrumb',
       'setTagNavList',
       'addTag',
-      'setLocal',
       'setHomeRoute',
       'closeTag'
     ]),
@@ -173,7 +155,6 @@ export default {
     })
     this.setBreadCrumb(this.$route)
     // 设置初始语言
-    this.setLocal(this.$i18n.locale)
     // 如果当前打开页面不在标签栏中，跳到homeName页
     if (!this.tagNavList.find(item => item.name === this.$route.name)) {
       this.$router.push({
